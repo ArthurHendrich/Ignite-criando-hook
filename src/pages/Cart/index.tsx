@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 import {
   MdDelete,
   MdAddCircleOutline,
   MdRemoveCircleOutline,
-} from 'react-icons/md';
+} from "react-icons/md";
 
-import { useCart } from '../../hooks/useCart';
-import { formatPrice } from '../../util/format';
-import { Container, ProductTable, Total } from './styles';
+import { useCart } from "../../hooks/useCart";
+import { formatPrice } from "../../util/format";
+import { Container, ProductTable, Total } from "./styles";
 
 interface Product {
   id: number;
@@ -15,6 +15,8 @@ interface Product {
   price: number;
   image: string;
   amount: number;
+  priceFormatted: string;
+  subTotal: string;
 }
 
 const Cart = (): JSX.Element => {
@@ -25,11 +27,10 @@ const Cart = (): JSX.Element => {
     priceFormatted: formatPrice(product.price),
     subTotal: formatPrice(product.price * product.amount),
   }));
-
   const total = formatPrice(
     cart.reduce((sumTotal, product) => {
-      return sumTotal + product.price * product.amount;
-    }, 0),
+      return (sumTotal += product.amount * product.price);
+    }, 0)
   );
 
   function handleProductIncrement(product: Product) {
@@ -58,13 +59,13 @@ const Cart = (): JSX.Element => {
         </thead>
         <tbody>
           {cartFormatted.map((product) => (
-            <tr key={product.id} data-testid="product">
+            <tr key={String(product.id)} data-testid="product">
               <td>
                 <img src={product.image} alt={product.title} />
               </td>
               <td>
                 <strong>{product.title}</strong>
-                <span>{product.priceFormatted}</span>
+                <span>{product.price}</span>
               </td>
               <td>
                 <div>
@@ -92,7 +93,7 @@ const Cart = (): JSX.Element => {
                 </div>
               </td>
               <td>
-                <strong>{product.subTotal}</strong>
+                <strong>{product.price}</strong>
               </td>
               <td>
                 <button
